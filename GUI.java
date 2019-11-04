@@ -77,70 +77,39 @@ public class GUI extends JFrame{
 //				});
 		
 		manual = new JButton("Manual");
-		manual.setActionCommand("disable");
+	//	manual.setActionCommand("disable");
 		timed = new JButton ("Timed");
 	//	timed.setEnabled(false);
-		timed.setActionCommand("disable");
+	//	timed.setActionCommand("disable");
 		
 	
 		
 		timed.addActionListener(handler);
 		manual.addActionListener(handler);
 		
+		display = new JButton ("Display Settings");
 		
-//		timed.addActionListener(
+		display.addActionListener(handler);
+//		display.addActionListener(
 //				new ActionListener() {
 //					public void actionPerformed( ActionEvent event) {
-////						if (event.getSource() == manual) {
-////							if (manual.isEnabled()) {
-////								timed.setEnabled(true);
-////								manual.setEnabled(false);
-////							}
-////							else {
-////								manual.setEnabled(false);
-////							}
+////						String onValue,timedValue;
+////						if (!on) {
+////							onValue = "not ";
 ////						}
-////						if (event.getSource() == timed) {
-////							if (timed.isEnabled()) {
-////								manual.setEnabled(true);
-////								timed.setEnabled(false);
-////							}
-////							else {
-////								timed.setEnabled(false);
-////							}
+////						else onValue="";
+////						
+////						if (time) {
+////							timedValue = "timed";
 ////						}
-//						if("disable".contentEquals(event.getActionCommand())) {
-//							manual.setEnabled(false);
-//							timed.setEnabled(true);
-//						}
-//						else {
-//							manual.setEnabled(true);
-//							timed.setEnabled(false);
-//						}
-//					}
-//							
-//				});
-		
-		display = new JButton ("Display Settings");
-		display.addActionListener(
-				new ActionListener() {
-					public void actionPerformed( ActionEvent event) {
-						String onValue,timedValue;
-						if (!on) {
-							onValue = "not ";
-						}
-						else onValue="";
-						
-						if (time) {
-							timedValue = "timed";
-						}
-						else timedValue = "manual";
-						
-						status.setText("The lights are "+ onValue + "on"
-									  +"\nThe light intensity is " + lightIntensityInt
-									  +"\nThe lights are set to "  + timedValue);
-					}	
-				});
+////						else timedValue = "manual";
+////						
+////						status.setText("The lights are "+ onValue + "on"
+////									  +"\nThe light intensity is " + lightIntensityInt
+////									  +"\nThe lights are set to "  + timedValue);
+//					}	
+//				}
+//					);
 		
 		
 		status = new JTextArea ("Displaying settings.... \n \n");
@@ -217,8 +186,25 @@ public class GUI extends JFrame{
 			}
 			toggle= !toggle;
 		}
+		else if (event.getSource() == display) {
+			String onValue,timedValue;
+			if (!on) {
+				onValue = "not ";
+			}
+			else onValue="";
 			
+			if (time) {
+				timedValue = "timed";
+			}
+			else timedValue = "manual";
+			
+			status.setText("The lights are "+ onValue + "on"
+						  +"\nThe light intensity is " + lightIntensityInt
+						  +"\nThe lights are set to "  + timedValue);
 		}
+		
+			
+		
 	}
 	}
 	//add components to the container in the correct place

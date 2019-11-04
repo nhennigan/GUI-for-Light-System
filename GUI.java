@@ -11,7 +11,6 @@ public class GUI extends JFrame{
 	private JButton onOff, light,manual,timed,display;
 	private JSlider lightIntensity;
 	private int lightIntensityInt = 1;
-	private JTextArea status;
 	private boolean toggle = true;
 	private boolean on,time = false;
 	private GridBagLayout layout;
@@ -53,8 +52,9 @@ public class GUI extends JFrame{
 						//updates the int value lightIntensityInt and set the light icon if lights are on
 						setLightIntensityInt(lightIntensity.getValue());
 						if(on) {
-						light.setIcon(array[lightIntensityInt-1]);
+							light.setIcon(array[lightIntensityInt-1]);
 						}
+						System.out.println("The lights have been set to intensity "+ lightIntensityInt);
 					}
 				});
 		
@@ -66,12 +66,11 @@ public class GUI extends JFrame{
 		timed.setBackground(Color.gray);
 		display = new JButton ("Display Settings");
 		
+		//Add actionListener handler to the button components
 		onOff.addActionListener(handler);
 		timed.addActionListener(handler);
 		manual.addActionListener(handler);
 		display.addActionListener(handler);
-		
-		status = new JTextArea ("Settings display area.... \n \n");
 	
 		//label for slider
 		JLabel label = new JLabel("Light Intensity",SwingConstants.CENTER);
@@ -88,9 +87,8 @@ public class GUI extends JFrame{
 		addComponent(manual,4,0,1,1);
 		addComponent(timed,5,0,1,1);
 		addComponent(display,6,0,1,1);
-		addComponent(status,7,0,1,2);
 		
-		setSize(400,350);
+		setSize(450,350);
 		setVisible( true) ;
 		
 		
@@ -110,12 +108,14 @@ public class GUI extends JFrame{
 			manual.setBackground(Color.gray);
 			timed.setBackground(display.getBackground());
 			time = true;
+			System.out.println("The lights have been set to timed");
 		}
 		// if manual button is pressed lights functionality turn to timed and timed is deactivated
 		else if (event.getSource() == manual) {
 			manual.setBackground(display.getBackground());
 			timed.setBackground(Color.gray);
 			time = false;
+			System.out.println("The lights have been set to manual");
 		}
 		// if onOff button is pressed the lights are turned on to the correct intensity
 		else if (event.getSource() == onOff) {
@@ -124,26 +124,30 @@ public class GUI extends JFrame{
 				light.setIcon(array[lightIntensityInt-1]);
 				light.setText("On");
 				on = true;
+				System.out.println("The lights have been turned on");
 			}
 			else {
 				light.setIcon(bulbOff);
 				light.setText("Off");
 				on = false;
+				System.out.println("The lights have been turned off");
 			}
 			toggle= !toggle;
 		}
-		// if display button is pressed the text area is updated to display the current settings
+		// if display button is pressed a message pops up with the settings
 		else if (event.getSource() == display) {
-			String onValue,timedValue;
+			String onValue,timedValue,status;
 			if (!on) { onValue = "not "; }
 			else onValue="";
 			
 			if (time) { timedValue = "timed";}
 			else timedValue = "manual";
 
-			status.setText("The lights are "+ onValue + "on"
+			status = "The lights are "+ onValue + "on"
 						  +"\nThe light intensity is " + lightIntensityInt
-						  +"\nThe lights are set to "  + timedValue);
+						  +"\nThe lights are set to "  + timedValue;
+			JOptionPane.showMessageDialog(null,status);
+			System.out.println("The lights settings have been displayed in a pop up");
 		}
 		
 	}

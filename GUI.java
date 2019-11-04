@@ -2,45 +2,47 @@
 
 import java.awt.*;
 import java.awt.event.*;
-
-//import javax.swing.JButton;
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.awt.Graphics;
 
 public class GUI extends JFrame{
 
 	private JButton onOff, light,manual,timed,display;
 	private JSlider lightIntensity;
-	private int lightIntensityInt;
+	private int lightIntensityInt = 1;
 	private JTextArea status;
-	private JTextArea label2;
 	private boolean toggle = true;
 	private boolean on,time = false;
 	private GridBagLayout layout;
 	private GridBagConstraints constraints;
 	private Container container;
 	
+	ImageIcon[] array = new ImageIcon[4];
 	ImageIcon bulbOff = new ImageIcon("C:\\Users\\niamh\\OneDrive\\Pictures\\l3off.gif");
-	ImageIcon bulbOn  = new ImageIcon("C:\\Users\\niamh\\OneDrive\\Pictures\\l3.gif");
 	
 	public GUI() {
 		//call button super and call it on top
 		super("Light Controls");
 		
-		ButtonHandler handler = new ButtonHandler();
+		//create array for icons for the lightbulb
+		ImageIcon bulbOn3  = new ImageIcon("C:\\Users\\niamh\\OneDrive\\Pictures\\l3.gif");
+		ImageIcon bulbOn1  = new ImageIcon("C:\\Users\\niamh\\OneDrive\\Pictures\\level1.gif");
+		ImageIcon bulbOn2  = new ImageIcon("C:\\Users\\niamh\\OneDrive\\Pictures\\level2.gif");
+		ImageIcon bulbOn4  = new ImageIcon("C:\\Users\\niamh\\OneDrive\\Pictures\\level4.gif");
+		array[0] = bulbOn1;
+		array[1] = bulbOn2;
+		array[2] = bulbOn3;
+		array[3] = bulbOn4;
 		
-		//new container
+		//create handler, container, layout and constraints
+		ButtonHandler handler = new ButtonHandler();
 		container = getContentPane();
-		//container layout
 		layout = new GridBagLayout();
 		container.setLayout(layout);
-		
 		constraints = new GridBagConstraints();
 
+		//creates slider for lightIntensity and it's handler
 		lightIntensity = new JSlider(SwingConstants.HORIZONTAL,1,4,1);
 		lightIntensity.setMajorTickSpacing( 1 );
 		lightIntensity.setPaintTicks( true );
@@ -48,80 +50,37 @@ public class GUI extends JFrame{
 		lightIntensity.addChangeListener(
 				new ChangeListener() {
 					public void stateChanged( ChangeEvent e) {
+						//updates the int value lightIntensityInt and set the light icon if lights are on
 						setLightIntensityInt(lightIntensity.getValue());
+						if(on) {
+						light.setIcon(array[lightIntensityInt-1]);
+						}
 					}
 				});
 		
-		// create onOff button and light button with event handler
+		// create onOff, light, manual, timed and display buttons 
 		onOff = new JButton("On/Off");
 		light = new JButton("Off",bulbOff);
-		onOff.addActionListener(handler);
-//		onOff.addActionListener(
-//				new ActionListener() {
-//					public void actionPerformed( ActionEvent event) {
-//						//toggles light icon on and off
-//						if(toggle) {
-//							light.setIcon(bulbOn);
-//							light.setText("On");
-//							on = true;
-//						//	label2 = new JTextArea("Kitchen Light on\nBathroom Light on\nHall Light on\nBedroom1 Light on");
-//						}
-//						else {
-//							light.setIcon(bulbOff);
-//							light.setText("Off");
-//							on = false;
-//						//	label2 = new JTextArea("Kitchen Light off\nBathroom Light off\nHall Light off\nBedroom1 Light off");
-//						}
-//						toggle= !toggle;
-//					}	
-//				});
-		
 		manual = new JButton("Manual");
-	//	manual.setActionCommand("disable");
 		timed = new JButton ("Timed");
-	//	timed.setEnabled(false);
-	//	timed.setActionCommand("disable");
-		
-	
-		
-		timed.addActionListener(handler);
-		manual.addActionListener(handler);
-		
+		timed.setBackground(Color.gray);
 		display = new JButton ("Display Settings");
 		
+		onOff.addActionListener(handler);
+		timed.addActionListener(handler);
+		manual.addActionListener(handler);
 		display.addActionListener(handler);
-//		display.addActionListener(
-//				new ActionListener() {
-//					public void actionPerformed( ActionEvent event) {
-////						String onValue,timedValue;
-////						if (!on) {
-////							onValue = "not ";
-////						}
-////						else onValue="";
-////						
-////						if (time) {
-////							timedValue = "timed";
-////						}
-////						else timedValue = "manual";
-////						
-////						status.setText("The lights are "+ onValue + "on"
-////									  +"\nThe light intensity is " + lightIntensityInt
-////									  +"\nThe lights are set to "  + timedValue);
-//					}	
-//				}
-//					);
 		
-		
-		status = new JTextArea ("Displaying settings.... \n \n");
+		status = new JTextArea ("Settings display area.... \n \n");
 	
+		//label for slider
 		JLabel label = new JLabel("Light Intensity",SwingConstants.CENTER);
 		Font font = new Font("",Font.BOLD,12);
 		label.setFont(font);
-		//label2 = new JTextArea("Kitchen Light \nBathroom Light \nHall Light \nBedroom1 Light ");
 		
+		//lays out the components and adds them to the container
 		constraints.fill = GridBagConstraints.VERTICAL;
 		addComponent(light,0,1,1,10);
-		//addComponent(label2,5,1,1,4);
 		constraints.fill = GridBagConstraints.BOTH;
 		addComponent(onOff, 0, 0, 1,1);
 		addComponent(lightIntensity,1,0,1,2);
@@ -143,39 +102,26 @@ public class GUI extends JFrame{
 		app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
-//	private class ButtonHandler implements ActionListener{
-//		public void actionPerformed( ActionEvent event) {
-//			//Displays message when button is pressed
-//			if(toggle) {
-//				light.setIcon(bulbOn);
-//				light.setText("On");
-//			}
-//			else {
-//				light.setIcon(bulbOff);
-//				light.setText("Off");
-//			}
-//			toggle= !toggle;
-//		}
-//	
-//	}
 	private class ButtonHandler implements ActionListener{
 		public void actionPerformed(ActionEvent event) {
 		
+		// if timed button is pressed lights functionality turn to timed and manual is deactivated
 		if (event.getSource() == timed) {
-			//timed.setBorder(new LineBorder(Color.blue));
 			manual.setBackground(Color.gray);
 			timed.setBackground(display.getBackground());
 			time = true;
 		}
+		// if manual button is pressed lights functionality turn to timed and timed is deactivated
 		else if (event.getSource() == manual) {
 			manual.setBackground(display.getBackground());
 			timed.setBackground(Color.gray);
 			time = false;
 		}
+		// if onOff button is pressed the lights are turned on to the correct intensity
 		else if (event.getSource() == onOff) {
 			//toggles light icon on and off
 			if(toggle) {
-				light.setIcon(bulbOn);
+				light.setIcon(array[lightIntensityInt-1]);
 				light.setText("On");
 				on = true;
 			}
@@ -186,27 +132,22 @@ public class GUI extends JFrame{
 			}
 			toggle= !toggle;
 		}
+		// if display button is pressed the text area is updated to display the current settings
 		else if (event.getSource() == display) {
 			String onValue,timedValue;
-			if (!on) {
-				onValue = "not ";
-			}
+			if (!on) { onValue = "not "; }
 			else onValue="";
 			
-			if (time) {
-				timedValue = "timed";
-			}
+			if (time) { timedValue = "timed";}
 			else timedValue = "manual";
-			
+
 			status.setText("The lights are "+ onValue + "on"
 						  +"\nThe light intensity is " + lightIntensityInt
 						  +"\nThe lights are set to "  + timedValue);
 		}
 		
-			
-		
 	}
-	}
+}
 	//add components to the container in the correct place
 	private void addComponent( Component component, int row, int column, int width, int height) {
 		constraints.gridx = column;
@@ -217,6 +158,7 @@ public class GUI extends JFrame{
 		container.add(component);
 	}
 	
+	//sets the int needed for lightIntensity
 	public void setLightIntensityInt (int value) {
 		lightIntensityInt = value;
 	}

@@ -5,8 +5,11 @@ import java.awt.event.*;
 
 //import javax.swing.JButton;
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import java.awt.Graphics;
 
 public class GUI extends JFrame{
 
@@ -14,18 +17,21 @@ public class GUI extends JFrame{
 	private JSlider lightIntensity;
 	private int lightIntensityInt;
 	private JTextArea status;
+	private JTextArea label2;
 	private boolean toggle = true;
-	private boolean on = false;
+	private boolean on,time = false;
 	private GridBagLayout layout;
 	private GridBagConstraints constraints;
 	private Container container;
+	
+	ImageIcon bulbOff = new ImageIcon("C:\\Users\\niamh\\OneDrive\\Pictures\\l3off.gif");
+	ImageIcon bulbOn  = new ImageIcon("C:\\Users\\niamh\\OneDrive\\Pictures\\l3.gif");
 	
 	public GUI() {
 		//call button super and call it on top
 		super("Light Controls");
 		
-		ImageIcon bulbOff = new ImageIcon("C:\\Users\\niamh\\OneDrive\\Pictures\\l3off.gif");
-		ImageIcon bulbOn  = new ImageIcon("C:\\Users\\niamh\\OneDrive\\Pictures\\l3.gif");
+		ButtonHandler handler = new ButtonHandler();
 		
 		//new container
 		container = getContentPane();
@@ -49,61 +55,104 @@ public class GUI extends JFrame{
 		// create onOff button and light button with event handler
 		onOff = new JButton("On/Off");
 		light = new JButton("Off",bulbOff);
-		onOff.addActionListener(
-				new ActionListener() {
-					public void actionPerformed( ActionEvent event) {
-						//toggles light icon on and off
-						if(toggle) {
-							light.setIcon(bulbOn);
-							light.setText("On");
-							on = true;
-						}
-						else {
-							light.setIcon(bulbOff);
-							light.setText("Off");
-							on = false;
-						}
-						toggle= !toggle;
-					}	
-				});
+		onOff.addActionListener(handler);
+//		onOff.addActionListener(
+//				new ActionListener() {
+//					public void actionPerformed( ActionEvent event) {
+//						//toggles light icon on and off
+//						if(toggle) {
+//							light.setIcon(bulbOn);
+//							light.setText("On");
+//							on = true;
+//						//	label2 = new JTextArea("Kitchen Light on\nBathroom Light on\nHall Light on\nBedroom1 Light on");
+//						}
+//						else {
+//							light.setIcon(bulbOff);
+//							light.setText("Off");
+//							on = false;
+//						//	label2 = new JTextArea("Kitchen Light off\nBathroom Light off\nHall Light off\nBedroom1 Light off");
+//						}
+//						toggle= !toggle;
+//					}	
+//				});
 		
 		manual = new JButton("Manual");
+		manual.setActionCommand("disable");
 		timed = new JButton ("Timed");
-		timed.addActionListener(
-				new ActionListener() {
-					public void actionPerformed( ActionEvent event) {
-						
-					}
-							
-				});
+	//	timed.setEnabled(false);
+		timed.setActionCommand("disable");
+		
+	
+		
+		timed.addActionListener(handler);
+		manual.addActionListener(handler);
+		
+		
+//		timed.addActionListener(
+//				new ActionListener() {
+//					public void actionPerformed( ActionEvent event) {
+////						if (event.getSource() == manual) {
+////							if (manual.isEnabled()) {
+////								timed.setEnabled(true);
+////								manual.setEnabled(false);
+////							}
+////							else {
+////								manual.setEnabled(false);
+////							}
+////						}
+////						if (event.getSource() == timed) {
+////							if (timed.isEnabled()) {
+////								manual.setEnabled(true);
+////								timed.setEnabled(false);
+////							}
+////							else {
+////								timed.setEnabled(false);
+////							}
+////						}
+//						if("disable".contentEquals(event.getActionCommand())) {
+//							manual.setEnabled(false);
+//							timed.setEnabled(true);
+//						}
+//						else {
+//							manual.setEnabled(true);
+//							timed.setEnabled(false);
+//						}
+//					}
+//							
+//				});
 		
 		display = new JButton ("Display Settings");
 		display.addActionListener(
 				new ActionListener() {
 					public void actionPerformed( ActionEvent event) {
-						String onValue;
+						String onValue,timedValue;
 						if (!on) {
 							onValue = "not ";
 						}
 						else onValue="";
 						
+						if (time) {
+							timedValue = "timed";
+						}
+						else timedValue = "manual";
+						
 						status.setText("The lights are "+ onValue + "on"
 									  +"\nThe light intensity is " + lightIntensityInt
-										 );
+									  +"\nThe lights are set to "  + timedValue);
 					}	
 				});
 		
 		
 		status = new JTextArea ("Displaying settings.... \n \n");
-		
+	
 		JLabel label = new JLabel("Light Intensity",SwingConstants.CENTER);
 		Font font = new Font("",Font.BOLD,12);
 		label.setFont(font);
-		JLabel label2 = new JLabel("Kitchen \nBathroom \nHall \nBedroom1 ");
+		//label2 = new JTextArea("Kitchen Light \nBathroom Light \nHall Light \nBedroom1 Light ");
 		
 		constraints.fill = GridBagConstraints.VERTICAL;
 		addComponent(light,0,1,1,10);
-	//	addComponent(label2,5,1,1,4)
+		//addComponent(label2,5,1,1,4);
 		constraints.fill = GridBagConstraints.BOTH;
 		addComponent(onOff, 0, 0, 1,1);
 		addComponent(lightIntensity,1,0,1,2);
@@ -140,7 +189,38 @@ public class GUI extends JFrame{
 //		}
 //	
 //	}
-	
+	private class ButtonHandler implements ActionListener{
+		public void actionPerformed(ActionEvent event) {
+		
+		if (event.getSource() == timed) {
+			//timed.setBorder(new LineBorder(Color.blue));
+			manual.setBackground(Color.gray);
+			timed.setBackground(display.getBackground());
+			time = true;
+		}
+		else if (event.getSource() == manual) {
+			manual.setBackground(display.getBackground());
+			timed.setBackground(Color.gray);
+			time = false;
+		}
+		else if (event.getSource() == onOff) {
+			//toggles light icon on and off
+			if(toggle) {
+				light.setIcon(bulbOn);
+				light.setText("On");
+				on = true;
+			}
+			else {
+				light.setIcon(bulbOff);
+				light.setText("Off");
+				on = false;
+			}
+			toggle= !toggle;
+		}
+			
+		}
+	}
+	}
 	//add components to the container in the correct place
 	private void addComponent( Component component, int row, int column, int width, int height) {
 		constraints.gridx = column;

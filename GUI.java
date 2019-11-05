@@ -8,7 +8,7 @@ import javax.swing.event.ChangeListener;
 
 public class GUI extends JFrame{
 
-	private JButton onOff, light,manual,timed,display;
+	private JButton onOff, light,display;
 	private JSlider lightIntensity;
 	private int lightIntensityInt = 1;
 	private boolean toggle = true;
@@ -16,6 +16,7 @@ public class GUI extends JFrame{
 	private GridBagLayout layout;
 	private GridBagConstraints constraints;
 	private Container container;
+	private JRadioButtonMenuItem manual,timed;
 	
 	ImageIcon[] array = new ImageIcon[4];
 	ImageIcon bulbOff = new ImageIcon("C:\\Users\\niamh\\OneDrive\\Pictures\\l3off.gif");
@@ -58,19 +59,29 @@ public class GUI extends JFrame{
 					}
 				});
 		
-		// create onOff, light, manual, timed and display buttons 
+		// create onOff, light and display buttons 
 		onOff = new JButton("On/Off");
 		light = new JButton("Off",bulbOff);
-		manual = new JButton("Manual");
-		timed = new JButton ("Timed");
-		timed.setBackground(Color.gray);
 		display = new JButton ("Display Settings");
+		
+		// create manual and timed radio buttons
+		manual = new JRadioButtonMenuItem("Manual");
+		manual.setBackground(Color.WHITE);
+		manual.setSelected(true);
+		timed = new JRadioButtonMenuItem("Timed");
+		timed.setBackground(Color.white);
+
+		ButtonGroup group = new ButtonGroup();
+		group.add(manual);
+		group.add(timed);
 		
 		//Add actionListener handler to the button components
 		onOff.addActionListener(handler);
 		timed.addActionListener(handler);
 		manual.addActionListener(handler);
 		display.addActionListener(handler);
+		manual.addActionListener(handler);
+		timed.addActionListener(handler);
 	
 		//label for slider
 		JLabel label = new JLabel("Light Intensity",SwingConstants.CENTER);
@@ -84,10 +95,13 @@ public class GUI extends JFrame{
 		addComponent(onOff, 0, 0, 1,1);
 		addComponent(lightIntensity,1,0,1,2);
 		addComponent(label,3,0,1,1);
-		addComponent(manual,4,0,1,1);
 		addComponent(timed,5,0,1,1);
+		addComponent(manual,4,0,1,1);
 		addComponent(display,6,0,1,1);
 		
+//		constraints.weightx = 1000;
+//		constraints.weighty = 1;
+//		
 		setSize(450,350);
 		setVisible( true) ;
 		
@@ -104,19 +118,15 @@ public class GUI extends JFrame{
 		public void actionPerformed(ActionEvent event) {
 		
 		// if timed button is pressed lights functionality turn to timed and manual is deactivated
-		if (event.getSource() == timed) {
-			manual.setBackground(Color.gray);
-			timed.setBackground(display.getBackground());
-			time = true;
-			System.out.println("The lights have been set to timed");
-		}
-		// if manual button is pressed lights functionality turn to timed and timed is deactivated
-		else if (event.getSource() == manual) {
-			manual.setBackground(display.getBackground());
-			timed.setBackground(Color.gray);
-			time = false;
-			System.out.println("The lights have been set to manual");
-		}
+			if (event.getSource() == timed) {
+				time = true;
+				System.out.println("The lights have been set to timed");
+			}
+			// if manual button is pressed lights functionality turn to timed and timed is deactivated
+			else if (event.getSource() == manual) {
+				time = false;
+				System.out.println("The lights have been set to manual");
+			}
 		// if onOff button is pressed the lights are turned on to the correct intensity
 		else if (event.getSource() == onOff) {
 			//toggles light icon on and off

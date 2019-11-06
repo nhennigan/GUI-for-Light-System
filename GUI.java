@@ -13,6 +13,7 @@ public class GUI extends JFrame{
 	private int lightIntensityInt = 1;
 	private boolean toggle = true;
 	private boolean on,time = false;
+	private JTextArea status;
 	private GridBagLayout layout;
 	private GridBagConstraints constraints;
 	private Container container;
@@ -59,10 +60,11 @@ public class GUI extends JFrame{
 					}
 				});
 		
-		// create onOff, light and display buttons 
+		// create onOff, light,status and display buttons 
 		onOff = new JButton("On/Off");
 		light = new JButton("Off",bulbOff);
 		display = new JButton ("Display Settings");
+		status = new JTextArea ("Displaying settings.... \n \n");
 		
 		// create manual and timed radio buttons
 		manual = new JRadioButtonMenuItem("Manual");
@@ -98,11 +100,9 @@ public class GUI extends JFrame{
 		addComponent(timed,5,0,1,1);
 		addComponent(manual,4,0,1,1);
 		addComponent(display,6,0,1,1);
+		addComponent(status,7,0,1,2);
 		
-//		constraints.weightx = 1000;
-//		constraints.weighty = 1;
-//		
-		setSize(450,350);
+		setSize(500,350);
 		setVisible( true) ;
 		
 		
@@ -146,18 +146,18 @@ public class GUI extends JFrame{
 		}
 		// if display button is pressed a message pops up with the settings
 		else if (event.getSource() == display) {
-			String onValue,timedValue,status;
+			String onValue,timedValue;
 			if (!on) { onValue = "not "; }
 			else onValue="";
 			
 			if (time) { timedValue = "timed";}
 			else timedValue = "manual";
 
-			status = "The lights are "+ onValue + "on"
+			status.setText ("The lights are "+ onValue + "on"
 						  +"\nThe light intensity is " + lightIntensityInt
-						  +"\nThe lights are set to "  + timedValue;
-			JOptionPane.showMessageDialog(null,status);
-			System.out.println("The lights settings have been displayed in a pop up");
+						  +"\nThe lights are set to "  + timedValue);
+			//JOptionPane.showMessageDialog(null,status);
+			System.out.println("The lights settings have been displayed in a text area");
 		}
 		
 	}
